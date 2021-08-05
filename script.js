@@ -7,7 +7,7 @@ const goods = [
     {title: 'Shoes', price: 250},
 ];
 
-const renderGoodsItem = (title = 'title', price = 0) => `<div class="goods-item"><h3>${title}</h3><p>${price}</p></div>`;
+const renderGoodsItem = (title = 'title', price = 0) => `<div class="goods-item"><h3 class="goods-title">${title}</h3><p class="price">${price}</p></div>`;
 
 const renderGoodList = (list) => {
     let goodsList = list.map(item => renderGoodsItem(item.title, item.price)).join('');
