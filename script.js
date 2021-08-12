@@ -1,3 +1,5 @@
+'use strict'
+
 const API_URL = 'https://raw.githubusercontent.com/GeekBrainsTutorial/online-store-api/master/responses';
 
 class GoodsItem {
@@ -15,10 +17,12 @@ class GoodsList {
         this.goods = [];
     }
 
-    fetchGoods(callback) {
-        makeGETRequest(`${API_URL}/catalogData.json`, (goods) => {
-            this.goods = JSON.parse(goods);
-            callback();
+    fetchGoods() {
+        return new Promise((resolve) => {
+            makeGETRequest(`${API_URL}/catalogData.json`, (goods) => {
+                this.goods = JSON.parse(goods);
+                resolve(this.goods)
+            })       
         })
     }
 
@@ -87,4 +91,6 @@ function makeGETRequest(url, callback) {
 }
 
 const list = new GoodsList();
-list.fetchGoods(() => list.render());
+list.fetchGoods().then((goods) => {
+    list.render(goods);
+});
