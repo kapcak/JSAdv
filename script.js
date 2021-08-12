@@ -56,18 +56,39 @@ class BucketList {
     constructor() {
         this.goodslist = []
     };
-    fetchItems(){
-        this.goodslist = [
-            new BucketItem('Shirt', 150, 10),
-            new BucketItem('Socks', 50, 15),
-            new BucketItem('Jacket', 350, 4),
-            new BucketItem('Shoes', 250, 12),
-        ];
-    };
+    
     render(){};
+    
     total_price() {
         return this.goodslist.reduce((acc, cur) => acc + cur.position_total(), 0);
     }
+
+    addItem() {
+        return new Promise((resolve) => {
+            makeGETRequest(`${API_URL}/addToBasket.json`, (goodslist) => {
+                let response = JSON.parse(goodslist);
+                resolve(response)
+            })       
+        })
+    };
+
+    removeItem() {
+        return new Promise((resolve) => {
+            makeGETRequest(`${API_URL}/deleteFromBasket.json`, (goodslist) => {
+                let response = JSON.parse(goodslist);
+                resolve(response)
+            })       
+        })
+    };
+
+    getItems() {
+        return new Promise((resolve) => {
+            makeGETRequest(`${API_URL}/getBasket.json`, (goodslist) => {
+                this.goodslist = JSON.parse(goodslist);
+                resolve(this.goodslist)
+            })       
+        })
+    };
 }
 
 
@@ -94,3 +115,8 @@ const list = new GoodsList();
 list.fetchGoods().then((goods) => {
     list.render(goods);
 });
+
+const basket = new BucketList();
+basket.getItems().then((goodslist) => { console.log(goodslist) })
+basket.removeItem().then((response) => { console.log(response) })
+basket.addItem().then((response) => { console.log(response) })
