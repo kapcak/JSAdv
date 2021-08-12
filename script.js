@@ -1,20 +1,4 @@
-'use strict'
-
-// const goods = [
-//     {title: 'Shirt', price: 150},
-//     {title: 'Socks', price: 50},
-//     {title: 'Jacket', price: 350},
-//     {title: 'Shoes', price: 250},
-// ];
-
-// const renderGoodsItem = (title = 'title', price = 0) => `<div class="goods-item"><h3 class="goods-title">${title}</h3><p class="price">${price}</p></div>`;
-
-// const renderGoodList = (list) => {
-//     let goodsList = list.map(item => renderGoodsItem(item.title, item.price)).join('');
-//     document.querySelector('.goods-list').innerHTML = goodsList;
-// }
-
-// renderGoodList(goods);
+const API_URL = 'https://raw.githubusercontent.com/GeekBrainsTutorial/online-store-api/master/responses';
 
 class GoodsItem {
     constructor(title, price) {
@@ -30,18 +14,18 @@ class GoodsList {
     constructor() {
         this.goods = [];
     }
-    fetchGoods() {
-        this.goods = [
-            {title: 'Shirt', price: 150},
-            {title: 'Socks', price: 50},
-            {title: 'Jacket', price: 350},
-            {title: 'Shoes', price: 250},
-        ];
+
+    fetchGoods(callback) {
+        makeGETRequest(`${API_URL}/catalogData.json`, (goods) => {
+            this.goods = JSON.parse(goods);
+            callback();
+        })
     }
+
     render() {
         let listHtml = '';
         this.goods.forEach(good => {
-            const goodItem = new GoodsItem(good.title, good.price);
+            const goodItem = new GoodsItem(good.product_name, good.price);
             listHtml += goodItem.render();
         });
         document.querySelector('.goods-list').innerHTML = listHtml;
@@ -51,7 +35,7 @@ class GoodsList {
 
 // Класс элемента корзины расширяет возможности класса товара,
 // теперь у него есть кол-во
-class BucketItem extends GoodsItem{
+class BucketItem extends GoodsItem {
     constructor(title, price, quantity) {
         super(title, price);
         this.quantity = quantity
@@ -82,6 +66,25 @@ class BucketList {
     }
 }
 
+
+function makeGETRequest(url, callback) {
+    var xhr;
+
+    if (window.XMLHttpRequest) {
+        xhr = new XMLHttpRequest();
+    } else if (window.ActiveXObject) {
+        xhr = new ActiveXObject("Microsoft.XMLHTTP")
+    }
+
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4) {
+            callback(xhr.responseText);
+        }
+    }
+
+    xhr.open('GET', url, true);
+    xhr.send();
+}
+
 const list = new GoodsList();
-list.fetchGoods();
-list.render();
+list.fetchGoods(() => list.render());
