@@ -15,12 +15,14 @@ class GoodsItem {
 class GoodsList {
     constructor() {
         this.goods = [];
+        this.filteredGoods = [];
     }
 
     fetchGoods() {
         return new Promise((resolve) => {
             makeGETRequest(`${API_URL}/catalogData.json`, (goods) => {
                 this.goods = JSON.parse(goods);
+                this.filteredGoods = JSON.parse(goods);
                 resolve(this.goods)
             })       
         })
@@ -28,13 +30,21 @@ class GoodsList {
 
     render() {
         let listHtml = '';
-        this.goods.forEach(good => {
+        this.filteredGoods.forEach(good => {
             const goodItem = new GoodsItem(good.product_name, good.price);
             listHtml += goodItem.render();
         });
         document.querySelector('.goods-list').innerHTML = listHtml;
     }
+
+    filterGoods(value) {
+        const regexp = new RegExp(value, 'i')
+        this.filteredGoods = this.goods.filter(good => 
+            regexp.test(good.product_name));
+        this.render()
+    }
 }
+
 
 
 // Класс элемента корзины расширяет возможности класса товара,
@@ -120,3 +130,11 @@ const basket = new BucketList();
 basket.getItems().then((goodslist) => { console.log(goodslist) })
 basket.removeItem().then((response) => { console.log(response) })
 basket.addItem().then((response) => { console.log(response) })
+
+const searchButton = document.querySelector('.search-button')
+const searchInput = document.querySelector('.goods-search')
+
+searchButton.addEventListener('click', (e) => {
+    const value = searchInput.value;
+    list.filterGoods(value);
+});
