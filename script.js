@@ -14,6 +14,7 @@ const app = new Vue({
     filteredGoods: [],
     basketGoods: [],
     searchLine: '',
+    isVisibleCart: false,
   },
   mounted() {
     this.makeGETRequest(`${API_URL}/catalogData.json`, (goods) => {
@@ -47,7 +48,7 @@ const app = new Vue({
     getBasket() {
       this.makeGETRequest(`${API_URL}/getBasket.json`, (basketGoods) => {
         this.basketGoods = basketGoods;
-        console.log(this.basketGoods);
+        isVisibleCart = true;
       });
     },
   },

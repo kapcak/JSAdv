@@ -23,7 +23,7 @@
                 </div>
             </div>
         </main>
-        <div v-if="basketGoods.length != 0">
+        <div v-if="isVisibleCart">
             <div class="goods-list" v-for="good in basketGoods.contents">
                 <div class="goods-item">
                     <h3 class="goods-title">{{ good.product_name }}</h3>
