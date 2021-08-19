@@ -13,7 +13,7 @@
         <header>
             <input type="text" class="goods-search" v-model="searchLine">
             <button class="search-button" type="button" @click="filterGoods">Искать</button>
-            <button class="cart-button" type="button">Корзина</button>
+            <button class="cart-button" type="button" @click="getBasket">Корзина</button>
         </header>
         <main>
             <div class="goods-list" v-for="good in filteredGoods">
@@ -23,6 +23,14 @@
                 </div>
             </div>
         </main>
+        <div v-if="basketGoods.length != 0">
+            <div class="goods-list" v-for="good in basketGoods.contents">
+                <div class="goods-item">
+                    <h3 class="goods-title">{{ good.product_name }}</h3>
+                    <p class="price">{{ good.price }}</p>
+                </div>
+        </div>
+    </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
 </body>

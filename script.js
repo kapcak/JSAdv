@@ -1,13 +1,18 @@
+/* eslint-disable linebreak-style */
+/* eslint-disable func-names */
+/* eslint-disable max-len */
 /* eslint-disable no-undef */
 /* eslint-disable vue/no-deprecated-data-object-declaration */
 /* eslint-disable linebreak-style */
 /* eslint-disable max-classes-per-file */
 const API_URL = 'https://raw.githubusercontent.com/GeekBrainsTutorial/online-store-api/master/responses';
+// eslint-disable-next-line no-unused-vars
 const app = new Vue({
   el: '#app',
   data: {
     goods: [],
     filteredGoods: [],
+    basketGoods: [],
     searchLine: '',
   },
   mounted() {
@@ -39,6 +44,12 @@ const app = new Vue({
       const regexp = new RegExp(this.searchLine, 'i');
       this.filteredGoods = this.goods.filter((good) => regexp.test(good.product_name));
     },
+    getBasket() {
+      this.makeGETRequest(`${API_URL}/getBasket.json`, (basketGoods) => {
+        this.basketGoods = basketGoods;
+        console.log(this.basketGoods);
+      });
+    },
   },
 });
 
@@ -49,6 +60,7 @@ const app = new Vue({
 //   }
 
 //   render() {
+// eslint-disable-next-line max-len
 //     return `<div class="goods-item"><h3 class="goods-title">${this.title}</h3><p class="price">${this.price}</p></div>`;
 //   }
 // }
