@@ -1,20 +1,56 @@
-/* eslint-disable linebreak-style */
-/* eslint-disable func-names */
-/* eslint-disable max-len */
-/* eslint-disable no-undef */
-/* eslint-disable vue/no-deprecated-data-object-declaration */
-/* eslint-disable linebreak-style */
-/* eslint-disable max-classes-per-file */
 const API_URL = 'https://raw.githubusercontent.com/GeekBrainsTutorial/online-store-api/master/responses';
-// eslint-disable-next-line no-unused-vars
+
+Vue.component('goods-list', {
+  props: ['goods'],
+  template: `
+  <div class="goods-list">
+    <goods-item v-for="good in goods" :good="good"></goods-item>
+  </div>
+  `,
+});
+
+Vue.component('goods-item', {
+  props: ['good'],
+  template: `
+    <div class="goods-item">
+      <h3>{{good.product_name}}</h3>
+      <p>{{good.price}}</p>
+    </div>  
+  `,
+});
+
+Vue.component('search', {
+  data: () => ({
+    value: '',
+  }),
+  template: `
+  <div>
+    <input type="text" class="goods-search" v-model="value">
+    <button class="search-button" type="button" @click="$emit('filter', value)">Искать</button>
+  </div>
+  `,
+});
+
+Vue.component('basket', {
+  props: ['isvisiblecart', 'basketgoods'],
+  template: `
+  <div v-if=isvisiblecart>
+  <div class="goods-list" v-for="good in basketgoods.contents">
+      <div class="goods-item">
+          <h3 class="goods-title">{{ good.product_name }}</h3>
+          <p class="price">{{ good.price }}</p>
+      </div>
+  </div>
+  </div>`,
+});
+
 const app = new Vue({
   el: '#app',
   data: {
     goods: [],
     filteredGoods: [],
     basketGoods: [],
-    searchLine: '',
-    isVisibleCart: false,
+    isVisibleCart: true,
   },
   mounted() {
     this.makeGETRequest(`${API_URL}/catalogData.json`, (goods) => {
@@ -41,8 +77,8 @@ const app = new Vue({
       xhr.open('GET', url, true);
       xhr.send();
     },
-    filterGoods() {
-      const regexp = new RegExp(this.searchLine, 'i');
+    filterGoods(value) {
+      const regexp = new RegExp(value, 'i');
       this.filteredGoods = this.goods.filter((good) => regexp.test(good.product_name));
     },
     getBasket() {
