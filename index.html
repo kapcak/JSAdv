@@ -12,20 +12,12 @@
     <div id="app">
         <header>
             <search v-on:filter="filterGoods"></search>
-            
             <button class="cart-button" type="button" @click="getBasket">Корзина</button>
         </header>
         <main>
             <goods-list :goods="filteredGoods"></goods-list>
         </main>
-        <div v-if="isVisibleCart">
-            <div class="goods-list" v-for="good in basketGoods.contents">
-                <div class="goods-item">
-                    <h3 class="goods-title">{{ good.product_name }}</h3>
-                    <p class="price">{{ good.price }}</p>
-                </div>
-        </div>
-    </div>
+        <basket :isvisiblecart="isVisibleCart" :basketgoods="basketGoods"></basket>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
 </body>

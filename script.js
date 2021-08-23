@@ -31,13 +31,26 @@ Vue.component('search', {
   `,
 });
 
+Vue.component('basket', {
+  props: ['isvisiblecart', 'basketgoods'],
+  template: `
+  <div v-if=isvisiblecart>
+  <div class="goods-list" v-for="good in basketgoods.contents">
+      <div class="goods-item">
+          <h3 class="goods-title">{{ good.product_name }}</h3>
+          <p class="price">{{ good.price }}</p>
+      </div>
+  </div>
+  </div>`,
+});
+
 const app = new Vue({
   el: '#app',
   data: {
     goods: [],
     filteredGoods: [],
     basketGoods: [],
-    isVisibleCart: false,
+    isVisibleCart: true,
   },
   mounted() {
     this.makeGETRequest(`${API_URL}/catalogData.json`, (goods) => {
