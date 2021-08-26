@@ -35,7 +35,7 @@ Vue.component('search', {
 });
 
 Vue.component('basket', {
-  props: ['isvisiblecart', 'basketgoods', 'good'],
+  props: ['basketgoods', 'good'],
   template: `
   <div class="goods-list">
     <basket-item v-for="(item, index) in basketgoods" :good="item" :key="index"></basket-item>
@@ -63,7 +63,6 @@ const app = new Vue({
     goods: [],
     filteredGoods: [],
     basketGoods: [],
-    isVisibleCart: true,
   },
   mounted() {
     this.makeGETRequest('/catalogData').then((goods) => {
@@ -101,18 +100,16 @@ const app = new Vue({
     getBasket() {
       this.makeGETRequest('/getBasket').then((basketGoods) => {
         this.basketGoods = basketGoods;
-        console.log(this.basketGoods);
-        this.isVisibleCart = true;
       });
     },
     addToCart(good) {
       this.makePOSTRequest('/addToCart', good)
-        .then(this.getBasket())
+        .then(() => setTimeout(app.getBasket(), 100))
         .catch(console.error());
     },
     deleteFromCart(good) {
       this.makePOSTRequest('/deleteFromCart', good)
-        .then(this.getBasket())
+        .then(() => setTimeout(app.getBasket(), 100))
         .catch(console.error());
     },
   },

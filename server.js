@@ -45,6 +45,7 @@ app.post('/deleteFromCart', jsonParser, (req, res) => {
       const cart = JSON.parse(data);
       if (cart.length === 0) {
         console.log('Empty cart');
+        res.send('{"result": 0}');
       } else {
         const item = req.body;
         console.log(`Deleting ${item.product_name} id: ${item.id}`);
