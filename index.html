@@ -17,7 +17,7 @@
         <main>
             <goods-list :goods="filteredGoods"></goods-list>
         </main>
-        <basket :isvisiblecart="isVisibleCart" :basketgoods="basketGoods"></basket>
+        <basket :isvisiblecart="isVisibleCart" :basketgoods="basketGoods" :key="basketGoods.length"></basket>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
 </body>

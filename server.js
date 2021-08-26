@@ -9,7 +9,6 @@ app.use(express.static('.'));
 
 app.get('/catalogData', (req, res) => {
   fs.readFile('catalog.json', 'utf-8', (err, data) => {
-    // console.log(data);
     res.send(data);
   });
 });
@@ -25,8 +24,9 @@ app.post('/addToCart', jsonParser, (req, res) => {
       item.id = cart.length;
       cart.push(item);
       fs.writeFile('cart.json', JSON.stringify(cart), (error) => {
-        console.log('done');
+        console.log(`Added ${item.product_name}`);
       });
+      res.send('{"result": 1}');
     }
   });
 });
@@ -51,8 +51,9 @@ app.post('/deleteFromCart', jsonParser, (req, res) => {
         const index = cart.findIndex((i) => i.id === item.id);
         cart.splice(index, 1);
         fs.writeFile('cart.json', JSON.stringify(cart), (error) => {
-          console.log('done');
+          console.log(`Deleted ${item.product_name} id: ${item.id}`);
         });
+        res.send('{"result": 1}');
       }
     }
   });

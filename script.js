@@ -2,7 +2,7 @@ Vue.component('goods-list', {
   props: ['goods'],
   template: `
   <div class="goods-list">
-    <goods-item v-for="good in goods" :good="good"></goods-item>
+    <goods-item v-for="(good, index) in goods" :good="good" :key="index"></goods-item>
   </div>
   `,
 });
@@ -38,7 +38,7 @@ Vue.component('basket', {
   props: ['isvisiblecart', 'basketgoods', 'good'],
   template: `
   <div class="goods-list">
-    <basket-item v-for="item in basketgoods" :good="item"></basket-item>
+    <basket-item v-for="(item, index) in basketgoods" :good="item" :key="index"></basket-item>
   </div>`,
 });
 
@@ -74,7 +74,11 @@ const app = new Vue({
   methods: {
     async makeGETRequest(url) {
       const response = await fetch(url);
-      return response.json();
+      if (!response.ok) {
+        throw new Error(`ERROR.Response status: ${response.statusText}`);
+      }
+      const resultJson = response.json();
+      return resultJson;
     },
     async makePOSTRequest(url, data) {
       const response = await fetch(url, {
@@ -84,7 +88,11 @@ const app = new Vue({
         },
         body: JSON.stringify(data),
       });
-      return response.json();
+      if (!response.ok) {
+        throw new Error(`ERROR.Response status: ${response.statusText}`);
+      }
+      const resultJson = response.json();
+      return resultJson;
     },
     filterGoods(value) {
       const regexp = new RegExp(value, 'i');
@@ -99,15 +107,13 @@ const app = new Vue({
     },
     addToCart(good) {
       this.makePOSTRequest('/addToCart', good)
-        .then((res) => console.log(res));
-      this.getBasket()
-        .then(console.log(this.basketGoods));
+        .then(this.getBasket())
+        .catch(console.error());
     },
     deleteFromCart(good) {
       this.makePOSTRequest('/deleteFromCart', good)
-        .then((res) => console.log(this.basketGoods));
-      this.getBasket()
-        .then(console.log(this.basketGoods));
+        .then(this.getBasket())
+        .catch(console.error());
     },
   },
 });
